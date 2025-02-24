@@ -1,71 +1,54 @@
-# showRequestsPort
-Show Requests Port is a simple Python-based port scanner that allows you to quickly check which ports on a target host are open and responding to requests.
+# Packet Monitoring Tool 🛡️
 
-🔥 TCP Request Monitor
-This Python script monitors TCP traffic and counts the number of requests per IP and port. It works by intercepting packets using NetfilterQueue and Scapy.
+## Description 📘
+This project is a Python script that uses `netfilterqueue` and `scapy` to intercept and monitor TCP traffic on specific ports. Each intercepted packet is analyzed, and the script keeps track of the number of requests made by each IP to certain ports.
 
-📌 Features
-✅ Monitors TCP traffic on ports 21-443
-✅ Keeps track of request counts for each IP-port combination
-✅ Works with iptables to capture packets
-✅ Prints real-time request statistics
+## Features ⚡
+- **TCP Packet Interception**: Captures TCP packets using a Netfilter queue.
+- **Request Counting by IP and Port**: Tracks how many requests are made to and from each IP-port combination.
+- **Real-Time Output**: Prints the request count live in the console.
 
-⚙️ Installation
-Make sure you have Python 3 installed and install the required dependencies:
+## Requirements 🛠️
+- Python 3
+- Libraries:
+  - `netfilterqueue`
+  - `scapy`
 
-bash
-Copia
-Modifica
+Install the required libraries with:
+```bash
 pip install netfilterqueue scapy
-You also need to configure iptables to forward packets to the NetfilterQueue.
+```
 
-bash
-Copia
-Modifica
-sudo iptables -I FORWARD -j NFQUEUE --queue-num 1
-(Use INPUT instead of FORWARD if running locally.)
+## Firewall Configuration 🔥
+To make the script work, you need to set up an iptables rule to forward traffic to the Netfilter queue:
+```bash
+iptables -I FORWARD -j NFQUEUE --queue-num 1
+```
 
-🚀 Usage
-1️⃣ Run the script with root privileges:
+For local testing:
+```bash
+iptables -I OUTPUT -j NFQUEUE --queue-num 1
+iptables -I INPUT -j NFQUEUE --queue-num 1
+```
 
-bash
-Copia
-Modifica
+After running the script, you can reset the rules with:
+```bash
+iptables --flush
+```
+
+## Execution ▶️
+Run the script with:
+```bash
 sudo python3 monitor.py
-2️⃣ The script will start monitoring TCP traffic and print logs like this:
+```
 
-less
-Copia
-Modifica
-[+] 192.168.1.10:80 - 5 requests
-[+] 192.168.1.20:443 - 2 requests
-3️⃣ When done, reset your iptables rule:
+## Warning ⚠️
+Running this script requires superuser privileges and modifies firewall rules. Use responsibly and only in controlled environments!
 
-bash
-Copia
-Modifica
-sudo iptables -D FORWARD -j NFQUEUE --queue-num 1
-📂 Creating an IP List (iplist)
-If you want to filter specific IPs, you can create an iplist.txt file with one IP per line:
-
-Copia
-Modifica
-192.168.1.10
-192.168.1.20
-Modify the script to only track requests from these IPs:
-
-python
-Copia
-Modifica
-with open("iplist.txt", "r") as file:
-    ip_list = set(file.read().splitlines())
-
-if ip_src in ip_list:
-    request_count[(ip_src, port_dst)] += 1
-⚠️ Disclaimer
-This tool is for educational purposes only. Use it responsibly and only on networks you own or have permission to monitor. 🛑
-
-📜 License
+## License 📄
 Distributed under the MIT License.
 
+---
+
+If you’d like to customize this file further or add new sections, let me know! 🚀
 
